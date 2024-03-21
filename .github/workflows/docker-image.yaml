@@ -1,0 +1,18 @@
+name: Docker Image CI
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: debain-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: 'google-github-actions/auth@v2'
+      with:
+        credentials_json: ${{ secrets.GCP_CREDENTIALS_JSON }}
+    - name: Build the Docker image
+      run: docker build -t ${{ vars.ACR_IMAGE_URL }}:${{ github.sha }} -f ./docker/nginx/Dockerfile .
+    
+    - name: Push the Docker image to GCP Registry
+      run: docker push ${{ vars.ACR_IMAGE_URL }}:${{ github.sha }}
