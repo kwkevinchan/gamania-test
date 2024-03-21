@@ -50,3 +50,14 @@ variable "default_node_pools" {
   }]
   description = "node pool configuration"
 }
+
+# acr
+variable "acr" {
+  type = object({
+    repository_id = string
+  })
+  default = {
+    repository_id = "gke-repository"
+  }
+  description = "The Artifact Registry setting"
+}
