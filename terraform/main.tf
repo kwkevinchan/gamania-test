@@ -19,7 +19,7 @@ resource "google_compute_subnetwork" "vpc_subnets" {
 # GKE
 resource "google_container_cluster" "gke_main" {
   name                     = var.gke_cluster.name
-  location                 = "asia-east1"
+  location                 = var.region
   network                  = google_compute_network.vpc.id
   subnetwork               = google_compute_subnetwork.vpc_subnets[var.gke_cluster.subnetwork_index].id
   node_version            = data.google_container_engine_versions.asia_east1_gke_version.latest_master_version
@@ -35,7 +35,7 @@ resource "google_container_cluster" "gke_main" {
 resource "google_container_node_pool" "gke_node_pool" {
   count      = length(var.default_node_pools)
   name       = var.default_node_pools[count.index].name
-  location   = "asia-east1"
+  location   = var.region
   cluster    = google_container_cluster.gke_main.name
   node_count = var.default_node_pools[count.index].default_node_count
   node_config {
