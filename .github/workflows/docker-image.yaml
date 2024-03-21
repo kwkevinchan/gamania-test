@@ -1,7 +1,7 @@
 name: Docker Image CI
 on:
   push:
-    branches: [ "main", "Feature-CICD" ]
+    branches: [ "main" ]
 
 jobs:
   build:
