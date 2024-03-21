@@ -13,6 +13,11 @@ jobs:
         credentials_json: ${{ secrets.GCP_CREDENTIALS_JSON }}
     - name: Build the Docker image
       run: docker build -t ${{ vars.ACR_IMAGE_URL }}:${{ github.sha }} -f ./docker/nginx/Dockerfile .
-    
+
+    - name: Login to GCP Registry
+      run: |
+        gcloud auth configure-docker asia-east1-docker.pkg.dev
+        gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://asia-east1-docker.pkg.dev
+
     - name: Push the Docker image to GCP Registry
       run: docker push ${{ vars.ACR_IMAGE_URL }}:${{ github.sha }}
