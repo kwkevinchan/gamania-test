@@ -13,6 +13,14 @@ jobs:
         with:
           credentials_json: ${{ secrets.GCP_CREDENTIALS_JSON }}
 
+      - name: Wait on check
+        uses: lewagon/wait-on-check-action@v1.3.3
+        with:
+          ref: refs/heads/main
+          check-name: 'Docker Image CI'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+
       # retag acr image
       - name: retag acr image
         run: gcloud artifacts docker tags add ${{ vars.ACR_IMAGE_URL }}:${{ github.sha }} ${{ vars.ACR_IMAGE_URL }}:${{ github.ref_name }}
@@ -25,21 +33,21 @@ jobs:
         run: |
           yq eval -i '.images[0].newTag = "${{ github.ref }}"' kustomize/overlays/prod/kustomization.yaml
           git add kustomization.yaml
-          git commit -m "Update image tag to ${{ github.ref }}"
+          git commit -m "Update image tag to ${{ github.ref_name }}"
           git push
       
-      # deploy to k8s
-      - name: 'get-credentials'
-        uses: 'google-github-actions/get-gke-credentials@v2'
-        with:
-          cluster_name: ${{ vars.GKE_CLUSTER_NAME }}
-          location: ${{ vars.REGION }}
-          credentials_json: ${{ secrets.GCP_CREDENTIALS_JSON }}
+      # # deploy to k8s
+      # - name: 'get-credentials'
+      #   uses: 'google-github-actions/get-gke-credentials@v2'
+      #   with:
+      #     cluster_name: ${{ vars.GKE_CLUSTER_NAME }}
+      #     location: ${{ vars.REGION }}
+      #     credentials_json: ${{ secrets.GCP_CREDENTIALS_JSON }}
 
-      - name: Setup Kustomize
-        run: |
-          curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
-          sudo mv kustomize /usr/local/bin/
+      # - name: Setup Kustomize
+      #   run: |
+      #     curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+      #     sudo mv kustomize /usr/local/bin/
 
-      - name: Kustomize Build
-        run: kubectl apply -k kustomize/overlays/prod
+      # - name: Kustomize release
+      #   run: kubectl apply -k kustomize/overlays/prod

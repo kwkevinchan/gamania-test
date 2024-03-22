@@ -44,13 +44,13 @@ docker push asia-east1-docker.pkg.dev/gamania-test-417905/gke-repository/nginx:v
 
 * kustomize: `kustomize/`
   * base: `kustomize/base/`
-  * overlay: `kustomize/overlay/`
+  * overlays: `kustomize/overlays/`
 
 ### cheat sheet
 
 ```bash
 gcloud container clusters get-credentials gamania-test-cluster --region asia-east1
-kubectl apply -k kustomize/overlay/prod/
+kubectl apply -k kustomize/overlays/prod/
 ```
 
 ## CI/CD Pipeline
