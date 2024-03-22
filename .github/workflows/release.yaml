@@ -15,7 +15,7 @@ jobs:
 
       # retag acr image
       - name: retag acr image
-        run: gcloud artifacts docker tags add ${{ vars.ACR_IMAGE_URL }}:${{ github.sha }} ${{ vars.ACR_IMAGE_URL }}${{ github.ref_name }}
+        run: gcloud artifacts docker tags add ${{ vars.ACR_IMAGE_URL }}:${{ github.sha }} ${{ vars.ACR_IMAGE_URL }}:${{ github.ref_name }}
       
       # push tag to kustomize file
       - name: install yq
