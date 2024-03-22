@@ -1,0 +1,47 @@
+name: release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS_JSON }}
+
+      # retag acr image
+      - name: retag acr image
+        run: gcloud artifacts docker tags add ${{ vars.ACR_IMAGE_URL }}:${{ github.sha }} ${{ github.ref }}
+      
+      # push tag to kustomize file
+      - name: install yq
+        run: |
+          wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
+          chmod +x /usr/bin/yq
+
+      - name: push tag to kustomize
+        run: |
+          yq eval -i '.images[0].newTag = "${{ github.ref }}"' kustomize/overlays/prod/kustomization.yaml
+          git add kustomization.yaml
+          git commit -m "Update image tag to ${{ github.ref }}"
+          git push
+      
+      # deploy to k8s
+      - name: 'get-credentials'
+        uses: 'google-github-actions/get-gke-credentials@v2'
+        with:
+          cluster_name: ${{ vars.GKE_CLUSTER_NAME }}
+          location: ${{ vars.REGION }}
+          credentials_json: ${{ secrets.GCP_CREDENTIALS_JSON }}
+
+      - name: Setup Kustomize
+        run: |
+          curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+          sudo mv kustomize /usr/local/bin/
+
+      - name: Kustomize Build
+        run: kubectl apply -k kustomize/overlays/prod

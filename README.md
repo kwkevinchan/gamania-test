@@ -49,7 +49,7 @@ docker push asia-east1-docker.pkg.dev/gamania-test-417905/gke-repository/nginx:v
 ### cheat sheet
 
 ```bash
-gcloud container clusters get-credentials  gamania-test-cluster --region asia-east1
+gcloud container clusters get-credentials gamania-test-cluster --region asia-east1
 kubectl apply -k kustomize/overlay/prod/
 ```
 
