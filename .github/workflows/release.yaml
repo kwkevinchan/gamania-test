@@ -18,11 +18,9 @@ jobs:
         run: gcloud artifacts docker tags add ${{ vars.ACR_IMAGE_URL }}:${{ github.sha }} ${{ vars.ACR_IMAGE_URL }}:${{ github.ref_name }}
       
       # push tag to kustomize file
-      - name: install yq
-        run: |
-          wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
-          chmod +x /usr/bin/yq
-
+      - name: yq - portable yaml processor
+        uses: mikefarah/yq@v4.42.1
+  
       - name: push tag to kustomize
         run: |
           yq eval -i '.images[0].newTag = "${{ github.ref }}"' kustomize/overlays/prod/kustomization.yaml
