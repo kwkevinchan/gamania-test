@@ -11,3 +11,4 @@ images:
 replicas:
   - name: nginx-deployment
     count: 3
+# test
