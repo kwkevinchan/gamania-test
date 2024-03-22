@@ -25,10 +25,10 @@ jobs:
           cluster_name: ${{ vars.GKE_CLUSTER_NAME }}
           location: ${{ vars.REGION }}
 
-      - name: Setup Kustomize
-        run: |
-          curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
-          sudo mv kustomize /usr/local/bin/
+      # - name: Setup Kustomize
+      #   run: |
+      #     curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+      #     sudo mv kustomize /usr/local/bin/
 
       - name: Kustomize Build
         run: kubectl apply -k kustomize/overlays/prod

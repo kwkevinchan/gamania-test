@@ -42,4 +42,6 @@ jobs:
           git push origin main
   
   deploy:
+    needs: release
     uses: ./.github/workflows/kustomize.yaml
+    secrets: inherit
