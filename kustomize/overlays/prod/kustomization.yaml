@@ -7,7 +7,7 @@ commonLabels:
 images:
   - name: nginx
     newName: asia-east1-docker.pkg.dev/gamania-test-417905/gke-repository/nginx
-    newTag: v2.10
+    newTag: v2.11
 replicas:
   - name: nginx-deployment
     count: 3
