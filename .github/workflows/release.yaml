@@ -23,6 +23,11 @@ jobs:
       # push tag to kustomize file
       - name: yq - portable yaml processor
         uses: mikefarah/yq@v4.42.1
+
+      - name: Add git config
+        run: |
+          git config --global user.email "github-actions@gamania.test"
+          git config --global user.name "github-actions"
   
       - name: push tag to kustomize
         run: |
