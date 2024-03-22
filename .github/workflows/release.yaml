@@ -13,14 +13,6 @@ jobs:
         with:
           credentials_json: ${{ secrets.GCP_CREDENTIALS_JSON }}
 
-      - name: Wait on check
-        uses: lewagon/wait-on-check-action@v1.3.3
-        with:
-          ref: refs/heads/main
-          check-name: 'Docker Image CI'
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          wait-interval: 10
-
       # retag acr image
       - name: retag acr image
         run: gcloud artifacts docker tags add ${{ vars.ACR_IMAGE_URL }}:${{ github.sha }} ${{ vars.ACR_IMAGE_URL }}:${{ github.ref_name }}

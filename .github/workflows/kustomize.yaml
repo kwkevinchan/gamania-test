@@ -16,6 +16,7 @@ jobs:
       - name: 'get-credentials'
         uses: 'google-github-actions/get-gke-credentials@v2'
         with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
           cluster_name: ${{ vars.GKE_CLUSTER_NAME }}
           location: ${{ vars.REGION }}
           credentials_json: ${{ secrets.GCP_CREDENTIALS_JSON }}
